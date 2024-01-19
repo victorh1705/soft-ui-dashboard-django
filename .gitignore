@@ -13,3 +13,7 @@ env
 *.sqlite*
 
 .env
+.env.*
+
+.docker
+.venv

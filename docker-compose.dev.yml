@@ -1,0 +1,79 @@
+version: '3.9'
+
+services:
+  app:
+    container_name: odonto_app
+    restart: always
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/home/python/app
+#    environment:
+#      - DEV_ENV=dev
+#      - USE_S3=True
+#      - AWS_STORAGE_BUCKET_NAME=odonto-app-bucket
+#      - ENV=dev
+#      - DB_ENGINE=postgresql
+#      - DB_HOST=db
+#      - DB_NAME=odonto_db
+#      - DB_USERNAME=odonto_user
+#      - DB_PASS=odonto_pass
+#      - DB_PORT=5432
+#      - DB_HOST=database-3.cegaaucsj8jy.us-east-1.rds.amazonaws.com
+#      - DB_ENGINE=postgresql
+#      - DB_NAME=init_db
+#      - DB_USERNAME=postgresql
+#      - DB_PASS=postgresql
+#      - DB_PORT=5432
+    ports:
+        - "8000:8000"
+    networks:
+      - db_network
+      - web_network
+    depends_on:
+      - db
+
+  app-prd:
+    container_name: odonto_app_prd
+    restart: always
+    build:
+      context: .
+      target: production
+    ports:
+      - "5005:5005"
+
+#  nginx:
+#    container_name: nginx
+#    restart: always
+#    image: "nginx:latest"
+#    ports:
+#      - "5085:5085"
+#    volumes:
+#      - ./nginx:/etc/nginx/conf.d
+#    networks:
+#      - web_network
+#    depends_on:
+#      - app
+#
+  db:
+    container_name: postgres
+    restart: always
+    image: 'postgres:15-alpine'
+    environment:
+      - POSTGRES_DB=odonto_db
+      - POSTGRES_USER=odonto_user
+      - POSTGRES_PASSWORD=odonto_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - .docker/postgres:/var/lib/postgresql/data
+    networks:
+      - db_network
+
+networks:
+  db_network:
+    driver: bridge
+  web_network:
+    driver: bridge
+ 
