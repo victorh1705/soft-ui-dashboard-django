@@ -14,7 +14,11 @@ import os, random, string
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()  # take environment variables from .env.
+ENVIRONMENT = os.environ.get('ENV')
+if ENVIRONMENT:
+    load_dotenv(f'.env.${ENVIRONMENT}')  # take environment variables from .env.
+else:
+    load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,15 +29,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 if not SECRET_KEY:
-    SECRET_KEY = ''.join(random.choice( string.ascii_lowercase  ) for i in range( 32 ))
+    SECRET_KEY = ''.join(random.choice(string.ascii_lowercase) for i in range(32))
 
 # Render Deployment Code
 DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '0.0.0.0',
+    '127.0.0.1'
+]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:    
+if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
@@ -83,27 +90,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DB_ENGINE   = os.getenv('DB_ENGINE'   , None)
-DB_USERNAME = os.getenv('DB_USERNAME' , None)
-DB_PASS     = os.getenv('DB_PASS'     , None)
-DB_HOST     = os.getenv('DB_HOST'     , None)
-DB_PORT     = os.getenv('DB_PORT'     , None)
-DB_NAME     = os.getenv('DB_NAME'     , None)
+DB_ENGINE = os.getenv('DB_ENGINE', None)
+DB_HOST = os.getenv('DB_HOST', None)
+DB_PORT = os.getenv('DB_PORT', None)
+DB_USERNAME = os.getenv('DB_USERNAME', None)
+DB_PASS = os.getenv('DB_PASS', None)
+DB_NAME = os.getenv('DB_NAME', None)
 
 if DB_ENGINE and DB_NAME and DB_USERNAME:
-    DATABASES = { 
-      'default': {
-        'ENGINE'  : 'django.db.backends.' + DB_ENGINE, 
-        'NAME'    : DB_NAME,
-        'USER'    : DB_USERNAME,
-        'PASSWORD': DB_PASS,
-        'HOST'    : DB_HOST,
-        'PORT'    : DB_PORT,
-        }, 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.' + DB_ENGINE,
+            'NAME': DB_NAME,
+            'USER': DB_USERNAME,
+            'PASSWORD': DB_PASS,
+            'HOST': DB_HOST,
+            'PORT': DB_PORT,
+        },
     }
 else:
     DATABASES = {
@@ -131,7 +137,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -143,14 +148,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-#if not DEBUG:
+# if not DEBUG:
 #    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
