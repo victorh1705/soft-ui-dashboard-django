@@ -1,3 +1,8 @@
+databases:
+  - name: odonto_app_hml
+    databaseName: odonto_db_fq79
+    user: odonto_user
+
 services:
   - type: web
     name: ct-django-soft-dash
