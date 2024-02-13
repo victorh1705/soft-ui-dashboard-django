@@ -1,8 +1,8 @@
 FROM python:3.11.5-slim as base
 
-RUN useradd -ms /bin/bash python
+# RUN useradd -ms /bin/bash python
 
-USER python
+#USER python
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -34,7 +34,7 @@ ENV PATH=$PATH:~/.local/bin/
 #CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"]
 COPY . .
 
-COPY --chown=python:python build.sh build.sh
+#COPY --chown=python:python build.sh build.sh
 RUN chmod +x build.sh
 
 #CMD ["./build.sh"]
