@@ -9,7 +9,7 @@ set -o errexit
 python manage.py collectstatic --no-input
 python manage.py migrate
 
-chown python:python .env
-chown python:python /home/python/app/.env
+chmod 444 .env
+chmod 444 /home/python/app/.env
 
 gunicorn --config gunicorn-cfg.py core.wsgi
