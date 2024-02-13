@@ -9,6 +9,6 @@ pip install -r requirements.txt
 python manage.py collectstatic --no-input
 python manage.py migrate
 
-chown python:python build.sh
+chown python:python .env
 
 gunicorn --config gunicorn-cfg.py core.wsgi
